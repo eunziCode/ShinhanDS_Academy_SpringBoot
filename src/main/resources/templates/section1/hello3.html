@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<h1>타임리프 연습</h1>
+	<h2>링크 연습</h2>
+	<ul>
+		<li>
+			<a href="http://localhost:7777/shinhan/freeboard/list">board조회1</a>
+		</li>
+		<li>
+			<a th:href="@{http://localhost:7777/shinhan/freeboard/list}">board조회2</a>
+		</li>
+		<li>
+			<a th:href="@{/freeboard/list}">board조회3</a>
+		</li>
+		<li>
+			<a th:href="@{/freeboard/list(myname='eunji')}">board조회(파라미터 전달)</a>
+		</li>
+		<li>
+			<a th:href="@{~/shinhan/freeboard/list}">board조회4</a>
+		</li>
+	</ul>
+	<img th:src="@{/assets/watch.jpg}">
+	
+	<p>[[${now}]]</p>
+	<p>[[${#dates.format(now,'yyyy-MM-dd')}]]</p>
+	<p>[[${#numbers.formatInteger(price,3,'COMMA')}]]</p>
+	<p>[[${title}]]</p>
+	<p th:text="${#strings.replace(title,'s','<b>s</b>')}"></p>
+	<p th:utext="${#strings.replace(title,'s','<b>s</b>')}"></p>
+	<p th:utext="${#strings.replace(title,'s','<i>s</i>')}"></p>
+	<p th:utext="${#strings.toUpperCase(title)}"></p>
+	
+	<ul>
+		<li th:each="word:${#strings.listSplit(title,' ')}">
+			[[${word}]]
+		</li>
+	</ul>
+	<ul>
+		<li th:each="op:${options}">
+			[[${op}]]
+		</li>
+	</ul>
+	<p>[[${options}]]</p>
+</body>
+</html>

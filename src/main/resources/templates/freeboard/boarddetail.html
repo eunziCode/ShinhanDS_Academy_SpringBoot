@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block th:replace="~{/layout/basicLayout :: setContent(~{this::content2})}">
+		<th:block th:fragment="content2">
+			<h1>FreeBoard 상세보기</h1>
+			bno : <input type="number" th:value="${board.bno}"><br>
+			title : <input type="text" th:value="${board.title}"><br>
+			content : <input type="text" th:value="${board.content}"><br>
+			writer : <input type="text" th:value="${board.writer}"><br>
+			regDate : <input type="text" th:value="${board.regDate}"><br>
+			updateDate : <input type="text" th:value="${board.updateDate}"><br>
+		</th:block>
+	</th:block>
+</body>
+</html>

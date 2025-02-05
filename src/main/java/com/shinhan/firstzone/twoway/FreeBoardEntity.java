@@ -7,6 +7,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shinhan.firstzone.onetomany.PDSBoardEntity;
 import com.shinhan.firstzone.onetomany.PDSFileEntity;
 
@@ -54,5 +55,6 @@ public class FreeBoardEntity {
 	// FetchType.EAGER인 경우 SQL문 수 줄이기
 	@BatchSize(size = 100)
 	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//	@JsonIgnore // Jackson이 JSON생성시 무시하기 → 즉, board 조회시 댓글은 제외함
 	List<FreeReplyEntity> replies;
 }

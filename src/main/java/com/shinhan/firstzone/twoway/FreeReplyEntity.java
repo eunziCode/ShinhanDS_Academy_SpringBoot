@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shinhan.firstzone.onetomany.PDSBoardEntity;
 import com.shinhan.firstzone.onetomany.PDSFileEntity;
 
@@ -47,6 +48,8 @@ public class FreeReplyEntity {
 	
 	// 연관관계 → 여러 개의 댓글은 하나의 board를 참조
 	// 컬럼은 n쪽에 만들어짐 즉, 댓글에 생성되는 것
+	// 자바진영의 toString()과 비슷
+	@JsonIgnore // Jackson이 JSON생성시 무시하기 → 즉, board조회시 댓글이 오고 댓글의 board는 JSON 만들기 무시
 	@ManyToOne(fetch = FetchType.LAZY)
 	private FreeBoardEntity board; // 컬럼이름은 board_bno
 }
