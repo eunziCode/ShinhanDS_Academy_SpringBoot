@@ -63,7 +63,7 @@ td {
 						</td>
 						<td>
 							<a th:href="@{/freeboard/detail2(bno=${board.bno})}" th:text="${board.bno}"></a>
-							<!-- <a th:href="@{/freeboard/detail/${board.bno}}" th:text="${board.bno}"></a> -->
+							<a th:href="@{/freeboard/detail/{bno}(bno=${board.bno})}" th:text="${board.bno}"></a>
 						</td>
 						<td th:text="${board.title}"></td>
 						<td th:text="${board.content}"></td>

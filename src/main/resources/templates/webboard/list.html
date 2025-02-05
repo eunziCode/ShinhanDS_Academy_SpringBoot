@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<th:block th:replace="~{/layout/basicLayout :: setContent(~{this::content2})}">
+		<th:block th:fragment="content2">
+			<h1>WebBoard 목록</h1>
+			<table class="table table-striped">
+					<tr>
+						<td>번호</td>
+						<td>제목</td>
+						<td>내용</td>
+						<td>작성자</td>
+						<td>등록일</td>
+						<td>수정일</td>
+					</tr>
+					<tr th:each="board:${boardlist}">
+						<td>
+							<a th:href="@{/webboard/detail(bno=${board.bno})}">@RequestParam이용:[[${board.bno}]]</a>
+							<a th:href="@{/webboard/detail2/{bno}(bno=${board.bno})}">@PathVariable이용:[[${board.bno}]]</a>
+						</td>
+						<td>[[${board.title}]]</td>
+						<td>[[${board.content}]]</td>
+						<td>[[${board.writer.mname}]]</td>
+						<td>[[${board.regdate}]]</td>
+						<td>[[${board.updatedate}]]</td>
+					</tr>
+			</table>
+		</th:block>
+	</th:block>
+</body>
+</html>

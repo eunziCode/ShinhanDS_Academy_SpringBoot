@@ -1,0 +1,62 @@
+package com.shinhan.firstzone.twoway2;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.querydsl.core.types.Predicate;
+import com.shinhan.firstzone.entity.MemberEntity;
+
+@Service
+public class WebBoardService {
+
+	@Autowired
+	WebBoardRepository boardRepo;
+	
+	// 조회 - 전체
+	public List<WebBoardEntity> selectAll() {
+		return boardRepo.findAll();
+	}
+	
+	// 조회 - 특정 bno의 상세보기
+	public WebBoardEntity selectById(Long bno) {
+		return boardRepo.findById(bno).orElse(null);
+	}
+	
+	// 조회 - 특정member가 작성한 board
+	public List<WebBoardEntity> selectByMember(MemberEntity member) {
+		return boardRepo.findByWriter(member);
+	}
+	
+	// 조회 - 동적SQL
+	public List<WebBoardEntity> dynamicSQL(String type, String keyword) {
+		Predicate pre = boardRepo.makePredicate(type, keyword);
+		return (List<WebBoardEntity>)boardRepo.findAll(pre);
+	}
+	
+	// 입력
+	public WebBoardEntity insertBoard(WebBoardEntity board) {
+		 return boardRepo.save(board);
+	}
+	
+	// 수정
+	public WebBoardEntity updateBoard(WebBoardEntity board) {
+		return boardRepo.save(board);
+	}
+	
+	// 삭제 - 단일
+	public void deleteBoard(Long bno) {
+		boardRepo.deleteById(bno);
+	}
+
+	// 삭제 - 복수
+	public void deleteBoards(List<Long> bnoList) {
+		boardRepo.deleteAllById(bnoList);
+	}
+	
+	// 삭제 - 전체
+	public void deleteAll() {
+		boardRepo.deleteAll();
+	}
+}
