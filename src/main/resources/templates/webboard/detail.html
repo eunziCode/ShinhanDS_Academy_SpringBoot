@@ -7,7 +7,7 @@
 <body>
 	<th:block th:replace="~{/layout/basicLayout :: setContent(~{this::content2})}">
 		<th:block th:fragment="content2">
-			<h1>Board 상세보기</h1>
+			<h1>[[${board.bno}]] 게시글 상세보기</h1>
 			<form th:action="@{/webboard/update}" method="post">
 				  <div class="mb-3 row">
 				    <label for="staticEmail" class="col-sm-2 col-form-label">bno</label>
@@ -30,8 +30,8 @@
 				  <div class="mb-3 row">
 				    <label for="staticEmail" class="col-sm-2 col-form-label">mname</label>
 				    <div class="col-sm-10">
-				      <input type="text" readonly class="form-control" name="writer" th:value="${board.writer.mname}">
-				      <input type="hidden" name="mid" th:value="${board.writer.mid}">
+				      <input type="text" readonly class="form-control" name="writer" th:value="${board.mname}">
+				      <input type="hidden" name="mid" th:value="${board.mid}">
 				    </div>
 				  </div>
 				  <div class="mb-3 row">
@@ -50,6 +50,167 @@
 				  	<input type="submit" value="수정" class="btn btn-success">
 				  </div>
 			</form>
+			<!-- 댓글추가  -->
+			<div>
+				<div class="mt-4">
+					<h5>
+						<button type="button" class="btn btn-primary">
+							<span class="badge badge-secondary addReply">Add Reply</span>
+						</button>
+					</h5>
+					<h5>
+						<button type="button" class="btn btn-primary">
+							<span class="badge badge-secondary replyCount">Reply Count
+								: [[${board.replyCount}]]</span>
+						</button>
+					</h5>
+				</div>
+				<div class="list-group replyList"></div>
+			</div>
+			<!-- Modal : 댓글추가하거나 상세보기에 이용할 예정 -->
+			<div class="modal" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">등록/수정</h5>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div class="form-group">
+								<input class="form-control" type="text" name="replyText" placeholder="댓글" /> 
+								<input class="form-control" type="text" name="replyer" placeholder="작성자" />
+								<input type="hidden" name="rno">
+								<input type="hidden" name="regdate">
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-warning replyModify">수정</button>
+							<button type="button" class="btn btn-primary replySave">입력</button>
+							<button type="button" class="btn btn-danger replyRemove">삭제</button>
+							<button type="button"
+								class="btn btn-outline-secondary replyClose"
+								data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+		    <script th:inline="javascript">
+		      var bno = /*[[${board.bno}]]*/ 0;
+		      var path = /*[[${@environment.getProperty('server.servlet.context-path')}]]*/ "";
+		
+		      $(function () {
+		        $(".addReply").on("click", f_addReply); // 댓글 등록ㆍ수정하는 모달창 띄우기
+		        $(".replyClose").on("click", f_closeModal); // 댓글 등록ㆍ수정하는 모달창 닫기
+		        $(".close").on("click", f_closeModal); // 댓글 등록ㆍ수정하는 모달창 닫기
+		        $("[data-dismiss]").click(f_closeModal); // data-dismiss속성이 존재하면 클릭시 창닫기
+		        
+		        $(".replyCount").on("click", f_replySelect); // 댓글목록 보기
+		        $(".replySave").on("click", f_replyInsert); // 댓글 입력하기
+		        $(".replyList").on("click",".card-body", f_replyModifyOpen); // 댓글창 열기
+		        $(".replyModify").click(f_replyModifyDB); // DB에 정보 수정
+		      });
+		      
+		      // 댓글 등록하는 모달창 띄우기
+		      function f_addReply() {
+		      	$("input[name='rno']").val(""); // data-rno
+		      	$("input[name='replyText']").val("");  
+		      	$("input[name='replyer']").val("");
+		      	
+		      	$(".modal-footer button").hide();
+		      	$(".replySave, .replyClose").show(); 
+		        $(".modal").show();
+		      }
+		      
+		      // 댓글 등록ㆍ수정하는 모달창 닫기		
+		      function f_closeModal() {
+		        $(".modal").hide();
+		      }
+		      
+			  // 댓글목록 보기
+		      function f_replySelect() {
+		        $.getJSON(`${path}/replies/list/${bno}`, f_dataDisplay)
+		      }		      
+		      
+		      // Ajax를 이용해서 Board의 댓글목록 보기
+		      function f_dataDisplay(replyList) {
+		        console.log(replyList);
+		        var output = '';
+				  $(".replyCount").html("Reply Count : " + replyList.length);
+				  $.each(replyList, function(index, reply){
+					  output += `
+						  <div class='card card-body' data-rno='${reply.rno}' style="width: 18rem;"  >
+	   				        <b>${reply.rno}</b>
+	   				        <h5 class='card-title'>${reply.replyText}</h5>
+	   				        <h5 class='card-subtitle mb-2 text-muted'>${reply.mid}</h5>
+	   				        <p class='card-regdate card-text mb-2 text-muted'>등록일: ${reply.regdate} </p>
+	   				        <p class='card-text mb-2 text-muted'>수정일: ${reply.updatedate} </p>
+	   				      </div>
+					  `;
+				  });
+				
+				  $(".replyList").html(output);
+		      }
+		      		      
+			  // 댓글 입력하기 - Ajax를 이용해서 Board의 댓글 입력하기
+			  function f_replyInsert(){
+			  	var replyText = $('[name="replyText"]').val(); // 댓글
+			  	var replyer = $('[name="replyer"]').val(); // 작성자
+			  	
+			  	$.ajax({
+			  		url:`${path}/replies/register`,
+			  		method:"post",
+			  		data:JSON.stringify({replyText, mid:replyer, boardBno:bno}),
+			  		contentType:"application/json;charset=utf-8",
+			  		success:function(responseData){
+			  			alert(responseData+"번의 댓글 등록 성공");
+			  			$(".modal").hide();
+			  			f_replySelect();
+			  		} 
+			  	});
+			  }
+			  
+		      // 수정창 열기
+		      function f_replyModifyOpen(){
+		      	$("input[name='rno']").val($(this).data("rno")); // data-rno
+		      	$("input[name='replyText']").val($(this).find(".card-title").html());  
+		      	$("input[name='replyer']").val($(this).find(".card-subtitle").html());
+		      	$("input[name='regdate']").val($(this).find(".card-regdate").html());
+		      	
+		      	$(".modal-footer button").hide();
+		      	$(".replyModify, .replyRemove, .replyClose").show(); 
+		      	
+		        $(".modal").show();
+		      }
+		      
+		      // DB에 정보 수정
+		      function f_replyModifyDB(){
+		      	var rno = $("input[name='rno']").val();
+		      	var replyText = $("input[name='replyText']").val();  
+		      	var mid = $("input[name='replyer']").val();
+		      	
+		      	$.ajax({
+			  		url:`${path}/replies/update`,
+			  		method:"put",
+			  		data:JSON.stringify({replyText, mid, rno, boardBno:bno}),
+			  		contentType:"application/json;charset=utf-8",
+			  		success:function(responseData){
+			  			alert(responseData+"번의 댓글 수정 성공");
+			  			$(".modal").hide();
+			  			f_replySelect();
+			  		} 
+			  	});
+		      }
+		
+		      function f_formatDate(str){
+				  var date = new Date(str);
+				  return date.getFullYear()+"/"+(date.getMonth()+1)+"/"+date.getDate()+" "
+				        + date.getHours()+":"+date.getMinutes();
+			  }		
+		    </script>
 		</th:block>
 	</th:block>
 </body>

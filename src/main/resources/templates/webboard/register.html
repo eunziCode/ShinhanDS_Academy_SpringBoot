@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insert title here</title>
+</head>
+<body>
+<th:block th:replace="~{/layout/basicLayout :: setContent(~{this::content2})}">
+  <th:block th:fragment="content2">
+    <form th:action="@{/webboard/register}" method="post">
+      <h1>게시글 등록</h1>
+      <div class="mb-3 row">
+        <label for="title" class="col-sm-2 col-form-label">title</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control"
+                 name="title" id="title">
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="content" class="col-sm-2 col-form-label">content</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control"
+                 name="content" id="content">
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <input type="submit" value="등록" class="btn btn-primary">
+      </div>
+
+    </form>
+  </th:block>
+</th:block>
+</body>
+</html>
