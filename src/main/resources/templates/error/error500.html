@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>500 ERROR</title>
+</head>
+<body>
+	<th:block th:replace="~{/layout/basicLayout :: setContent(~{this::content2})}">
+		<th:block th:fragment="content2">
+			<h1>500 ERROR 정보</h1>
+			알림메시지 : <label th:text="${msg}"></label><br>
+			errInfo : <label th:text="${errInfo}"></label>
+		</th:block>
+	</th:block>
+</body>
+</html>

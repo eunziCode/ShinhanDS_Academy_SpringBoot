@@ -3,6 +3,7 @@ package com.shinhan.firstzone.twoway2;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,12 @@ public class WebReplyRestController {
 	@Autowired
 	WebReplyService replyService;
 	
+	@DeleteMapping(value = "/delete/{rno}" )
+	public Long delete(@PathVariable Long rno) {
+		replyService.deleteReply(rno);
+		
+		return rno;
+	}
 	
 	@PutMapping(value= "/update", consumes = "application/json")
 	public Long update(@RequestBody WebReplyDTO dto) {

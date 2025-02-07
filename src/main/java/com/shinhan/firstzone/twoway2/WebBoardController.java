@@ -27,6 +27,12 @@ public class WebBoardController {
 	@Autowired
 	MemberRepository memberRepo;
 	
+	@GetMapping("/delete")
+	public String delete(Long bno  ) {		
+		boardService.deleteBoard(bno);
+		return "redirect:list2";
+	}
+	
 	@GetMapping("/register")
 	public void insert() {
 		
@@ -34,22 +40,20 @@ public class WebBoardController {
 	
 	@PostMapping("/register")
 	public String update(WebBoardDTO board, HttpSession session) {
-		String mid = "";
+		String mid = "spring1";
 		
 		board.setMid(mid);
 		WebBoardEntity entity = boardService.dtoToEntity(board);
 		boardService.updateBoard(entity);		
 		
-		return "redirect:list";
+		return "redirect:list2";
 	}
 	
 	@PostMapping("/update")
-	public String update(WebBoardEntity board, String mid) {
-		MemberEntity member = MemberEntity.builder().mid(mid).build();
-		board.setWriter(member);
-		log.info(board.toString());
-		boardService.updateBoard(board);
-		return "redirect:list";
+	public String update(WebBoardDTO board) {
+		WebBoardEntity entity = boardService.dtoToEntity(board);
+		boardService.updateBoard(entity);
+		return "redirect:list2";
 	}
 	
 	@GetMapping("/detail")

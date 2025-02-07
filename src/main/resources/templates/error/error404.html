@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>404 ERROR</title>
+</head>
+<body>
+	<th:block th:replace="~{/layout/basicLayout :: setContent(~{this::content2})}">
+		<th:block th:fragment="content2">
+			<h1>알림 : 주소확인 필요!</h1>
+			알림메시지 : <label th:text="${msg}"></label>
+		</th:block>
+	</th:block>
+</body>
+</html>

@@ -57,7 +57,8 @@
     <ul class="pagination h-100 justify-content-center align-items-center">
       <li class="page-item" th:if="${boardResult.prev}">
         <a class="page-link"
-           th:href="@{/webboard/list2(page=${boardResult.start-1})}" tabindex="-1">Previos
+           th:href="@{/webboard/list2(page=${boardResult.start-1}),size=${pageRequestDTO.size},
+           type=${pageRequestDTO.type},keyword=${pageRequestDTO.keyword})}" tabindex="-1">Previos
         </a>
       </li>
       <li class=" 'page-item ' + ${boardResult.page==page?'active':''}"
@@ -70,7 +71,8 @@
       <li class="page-item" th:if="${boardResult.next}">
         <a
           class="page-link"
-          th:href="@{/webboard/list2(page=${boardResult.end+1})}">Next
+          th:href="@{/webboard/list2(page=${boardResult.end+1}),size=${pageRequestDTO.size},
+           type=${pageRequestDTO.type},keyword=${pageRequestDTO.keyword})}">Next
         </a>
       </li>
     </ul>
