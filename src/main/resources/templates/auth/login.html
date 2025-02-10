@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	  <h1>로그인 Page</h1>
+	 
+		<div class="panel-body">
+			 
+			<form method="post" >  <!-- action="/auth/login" -->
+				<p>
+					<label for="username">사용자번호</label> 
+					<input type="text"
+						id="username" name="mid" value="" />
+					    <!-- 이름변경불가  : username -->
+					    <!-- 이름을 바꿀경우 config에서 선언 필요 -->
+				</p>
+				<p>
+					<label for="password">비밀번호</label> 
+					<input type="password"
+						id="password" name="password" value="" />
+					    <!-- 이름변경불가  : password -->
+				</p>
+				
+				<button type="submit" class="btn btn-primary">Log in</button>
+
+				<input type="text" th:name="${_csrf.parameterName}" 
+				th:value="${_csrf.token}" />
+
+			</form>
+			 
+		</div>
+	 
+
+    
+</body>
+</html>

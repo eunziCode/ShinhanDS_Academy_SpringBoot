@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.querydsl.core.BooleanBuilder;
 import com.shinhan.firstzone.entity.MemberEntity;
@@ -19,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest
-public class ManyToOneTest {
+public class ManyToOneTestMember {
 
 	@Autowired
 	MemberRepository memberRepo;
@@ -166,6 +167,28 @@ public class ManyToOneTest {
 		});
 	}
 	
+	@Autowired
+	PasswordEncoder passEncoder;
+	
+	@Test
+	public void memberUpdate() {
+		memberRepo.findById("spring10").ifPresent(m->{
+			m.setMpassword(passEncoder.encode("1234"));
+			m.setMrole(MemberRole.USER);
+			memberRepo.save(m);
+		});
+	}
+	
+//	@Test
+	public void memberInsert2() {
+		MemberEntity member = MemberEntity.builder()
+										  .mid("manager1")
+										  .mpassword(passEncoder.encode("1234"))
+										  .mname("매니저1")
+										  .mrole(MemberRole.MANAGER)
+										  .build();
+		memberRepo.save(member);
+	}
 }
 
 

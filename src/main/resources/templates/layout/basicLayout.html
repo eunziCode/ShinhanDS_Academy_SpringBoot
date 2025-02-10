@@ -9,6 +9,11 @@
 		content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 	<meta name="description" content="" />
 	<meta name="author" content="" />
+	
+	<!-- csrf 토큰 저장 -->
+	<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+	
 	<title>Simple Sidebar - Start Bootstrap Template</title>
 	<!-- Favicon-->
 	<link rel="icon" type="image/x-icon" th:href="@{assets/favicon.ico}" />

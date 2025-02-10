@@ -104,6 +104,18 @@
 		    <script th:inline="javascript">
 		      var bno = /*[[${board.bno}]]*/ 0;
 		      var path = /*[[${@environment.getProperty('server.servlet.context-path')}]]*/ "";
+		      
+		      var token = $("meta[name='_csrf']").attr("content");
+			  var header = $("meta[name='_csrf_header']").attr("content");
+			  var beforeSend = function(xhr){ xhr.setRequestHeader(header, token);}
+			  
+			  function ajax_send(){
+				  if(token && header) {
+					$(document).ajaxSend(function(event, xhr, options) {
+						xhr.setRequestHeader(header, token);
+					});
+					}
+			  }
 		
 		      $(function () {
 		        $(".addReply").on("click", f_addReply); // 댓글 등록ㆍ수정하는 모달창 띄우기
@@ -165,6 +177,7 @@
 			  	var replyer = $('[name="replyer"]').val(); // 작성자
 			  	
 			  	$.ajax({
+			  		beforeSend,
 			  		url:`${path}/replies/register`,
 			  		method:"post",
 			  		data:JSON.stringify({replyText, mid:replyer, boardBno:bno}),
@@ -197,6 +210,7 @@
 		      	var mid = $("input[name='replyer']").val();
 		      	
 		      	$.ajax({
+		      		beforeSend,
 			  		url:`${path}/replies/update`,
 			  		method:"put",
 			  		data:JSON.stringify({replyText, mid, rno, boardBno:bno}),
@@ -213,6 +227,7 @@
 		      function f_replyDelete(){
 		          var rno =  $("input[name='rno']").val();
 		          $.ajax({
+		           beforeSend,
 		           url:`${path}/replies/delete/${rno}`,
 		           method:"delete",
 		             success:function(responseData){

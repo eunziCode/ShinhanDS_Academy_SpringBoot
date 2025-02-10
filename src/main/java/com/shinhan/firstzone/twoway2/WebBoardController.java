@@ -1,6 +1,11 @@
 package com.shinhan.firstzone.twoway2;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +44,32 @@ public class WebBoardController {
 	}
 	
 	@PostMapping("/register")
-	public String update(WebBoardDTO board, HttpSession session) {
-		String mid = "spring1";
+	public String update(WebBoardDTO board, HttpSession session, 
+						 Principal principal, Authentication authentication) {
+		// security 추가하여 주석으로 변경함 
+//		String mid = "spring1";
+		
+
+		// 1. Principal
+		String a = principal.getName();
+		System.out.println("1. Principal:"+a);
+		
+		// 2. Authentication
+		UserDetails user = (UserDetails) authentication.getPrincipal();
+		String b = user.getUsername();
+		System.out.println("2. Authentication:"+b);
+		
+		// 3. SecurityContextHolder
+		UserDetails user2 = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String c = user2.getUsername();
+		System.out.println("3. SecurityContextHolder:"+c);
+		
+		// 4. HttpSession
+		// session에 저장된 값 받이오기(개발자가 임의로 넣은 코드)
+		MemberEntity member = (MemberEntity) session.getAttribute("loginMember");
+		String mid = member.getMid();
+		System.out.println("4. HttpSession:"+mid);
+		
 		
 		board.setMid(mid);
 		WebBoardEntity entity = boardService.dtoToEntity(board);
@@ -82,7 +111,7 @@ public class WebBoardController {
 
         model.addAttribute("boardResult", boardResult);
         model.addAttribute("pageRequestDTO", pageRequestDTO);
-        return "/webboard/list2";
+        return "webboard/list2";
     }
 	
     private WebBoardDTO getWebBoardDTO(Long bno) {
