@@ -23,11 +23,14 @@ public class SpringSecurityConfig {
 	private static final String[] MANAGER_LIST = {"/security/manager"};
 	private static final String[] ADMIN_LIST = {"/security/admin"};
 	private static final String[] USER_LIST = {"/security/user", "/webboard/*"};
-	private static final String[] WHITE_LIST = {"/security/all", "/auth/*", "/v3/**", "/swagger-ui/**"};
+	private static final String[] WHITE_LIST = {"/security/all", "/emp/**","/api/webboard/**", "/replies/**",
+												"/auth/*", "/v3/**", "/swagger-ui/**"};
 	/// 정적자원 : "/assets/*", "/css/*", "/js/*", "/vendor/**" 
 	
 	@Bean
 	public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
+		// 조회는 token 없어도 됨, 입력&수정&삭제 token 필요
+		http.csrf(c->c.disable()); // default는 csrf가 enabled로 되어있음
 		http.authorizeHttpRequests(auth->{
 			// 권한이 필요한 페이지들 설정
 			auth.requestMatchers(MANAGER_LIST).hasRole("MANAGER");
@@ -40,7 +43,8 @@ public class SpringSecurityConfig {
 			// 위에 선언되지 않은 권한은 로그인이 되기만 하면 인가
 			auth.anyRequest().authenticated(); 
 		});
-		//http.csrf(c->c.disable()); // default는 csrf가 enabled로 되어있음
+		
+		/* react 공부시 로그인 없이 진행하기 위해 주석 처리(2025.02.18)
 		http.formLogin(login->{
 			login.loginPage("/auth/login") // 로그인 요청 주소
 				 .usernameParameter("mid") // username을 mid로 받겠다는 의미
@@ -57,7 +61,7 @@ public class SpringSecurityConfig {
 		http.exceptionHandling(handling->{
 			handling.accessDeniedPage("/auth/accessDenined");
 		});
-		
+		*/
 		
 		return http.build();
 	}

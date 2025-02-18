@@ -53,9 +53,12 @@ public class EmpService {
 		ModelMapper mapper = new ModelMapper();
 		EmpDTO dto = mapper.map(entity, EmpDTO.class);
 		
-		dto.setJob_id(entity.getJob().getJob_id());
-		dto.setManager_id(entity.getManager().employee_id);
-		dto.setDepartment_id(entity.getDept().getDepartment_id());
+		dto.setJob_id(entity.getJob()==null?null:entity.getJob().getJob_id());
+		dto.setManager_id(entity.getManager()==null?null:entity.getManager().getEmployee_id());
+		if(entity.getDept() != null) {
+			dto.setDepartment_id(entity.getDept().getDepartment_id());			
+			dto.setDepartment_name(entity.getDept().getDepartment_name());			
+		}
 		
 		return dto;
 	}
