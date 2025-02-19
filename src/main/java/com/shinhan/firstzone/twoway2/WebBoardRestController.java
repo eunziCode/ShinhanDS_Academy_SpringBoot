@@ -30,25 +30,25 @@ public class WebBoardRestController { // react와의 통신을 위한 restcontro
 	MemberRepository memberRepo;
 	
 	
-	@PostMapping("/register")
-	public String insertPost(@RequestBody WebBoardDTO board) {
+	@PostMapping(value="/register", consumes = "application/json")
+	public ResponseDTO insertPost(@RequestBody WebBoardDTO board) {
 		WebBoardEntity entity = boardService.dtoToEntity(board);
 		boardService.insertBoard(entity);		
 		
-		return "insert OK";
+		return ResponseDTO.builder().job("register").message("insert OK").build();
 	}
 	
 	@PutMapping("/update")
-	public String update(@RequestBody WebBoardDTO board) {
+	public ResponseDTO update(@RequestBody WebBoardDTO board) {
 		WebBoardEntity entity = boardService.dtoToEntity(board);
 		boardService.updateBoard(entity);
-		return "update OK";
+		return ResponseDTO.builder().job("update").message("update OK").build();
 	}
 	
 	@DeleteMapping("/delete/{bno}")
-	public String delete(@PathVariable Long bno) {		
+	public ResponseDTO delete(@PathVariable Long bno) {		
 		boardService.deleteBoard(bno);
-		return "delete OK";
+		return ResponseDTO.builder().job("update").message("delete OK").build();
 	}
 	
 //	@GetMapping("/detail/{bno}") = @GetMapping(value="/detail/{bno}", produces = "application/json")

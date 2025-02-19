@@ -4,21 +4,30 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.shinhan.firstzone.security.jwt.JwtAuthFilter;
+import com.shinhan.firstzone.security.jwt.JwtUtil;
+
+import lombok.RequiredArgsConstructor;
 
 //SpringBoot 3버전 사용중
 // @Configuration, @EnableWebSecurity, @Bean : application 시작시 해석함
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SpringSecurityConfig {
+	
+	private final MemberService memberService;
+	private final JwtUtil jwtUtil;
 
-	@Bean
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+	// SpringSecurityConfig가 memberService를 autowired 했는데 memberService에서도 passwordEncoder를 쓰다보니 무한 루프에 빠지게 됨
+	//오류 발생!Requested bean is currently in creation: Is there an unresolvable circular reference or an asynchronous initialization dependency?
+//	@Bean
+//	PasswordEncoder passwordEncoder() {
+//		return new BCryptPasswordEncoder();
+//	}
 	
 	private static final String[] MANAGER_LIST = {"/security/manager"};
 	private static final String[] ADMIN_LIST = {"/security/admin"};
@@ -43,6 +52,9 @@ public class SpringSecurityConfig {
 			// 위에 선언되지 않은 권한은 로그인이 되기만 하면 인가
 			auth.anyRequest().authenticated(); 
 		});
+		
+		http.addFilterBefore(new JwtAuthFilter(memberService, jwtUtil),
+							 UsernamePasswordAuthenticationFilter.class);
 		
 		/* react 공부시 로그인 없이 진행하기 위해 주석 처리(2025.02.18)
 		http.formLogin(login->{
